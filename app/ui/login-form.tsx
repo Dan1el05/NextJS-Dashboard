@@ -1,4 +1,5 @@
 'use client';
+import {useForm} from "react-hook-form"
  
 import { lusitana } from '@/app/ui/fonts';
 import {
@@ -13,6 +14,16 @@ import { authenticate } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
  
 export default function LoginForm() {
+
+  const {
+    register, 
+    handleSubmit,
+    formState: {errors, isSubmitting},
+    reset,
+    getValues,
+  } = useForm()
+
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const [errorMessage, formAction, isPending] = useActionState(
@@ -36,12 +47,15 @@ export default function LoginForm() {
             </label>
             <div className="relative">
               <input
+                {...register("email", {
+                 required: "Email is required"
+
+                })}
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="email"
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
-                required
               />
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -55,12 +69,12 @@ export default function LoginForm() {
             </label>
             <div className="relative">
               <input
+              {...register("password")}
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="password"
                 type="password"
                 name="password"
                 placeholder="Enter password"
-                required
                 minLength={6}
               />
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
